@@ -14,30 +14,34 @@ class SpicesController < ApplicationController
 
   # PATCH /spices/:id
   def update
-    spice = Spice.find_by_id(params[:id])
-    if spice
-      spice.update(spice_params)
-      render json: spice
-    else
-      render json: { error: "Spice not found" }
-    end
+    spice = find_spice
+    spice.update(spice_params)
+    render json: spice
+  rescue ActiveRecord::RecordNotFound
+    spice_not_found
   end
 
   # DELETE /spices/:id
   def destroy
-    spice = Spice.find_by_id(params[:id])
-    if spice
-      spice.destroy
-      head :no_content
-    else
-      render json: { error: "Spice not found" }
-    end
+    spice = find_spice
+    spice.destroy
+    head :no_content
+  rescue ActiveRecord::RecordNotFound
+    spice_not_found
   end
 
 
   private
 
+  def find_spice
+    Spice.find(params[:id])
+  end
+
   def spice_params
     params.permit(:title, :image, :description, :notes, :rating)
+  end
+
+  def spice_not_found
+    render json: { error: "Spice not found" }
   end
 end
