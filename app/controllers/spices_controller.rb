@@ -23,6 +23,17 @@ class SpicesController < ApplicationController
     end
   end
 
+  # DELETE /spices/:id
+  def destroy
+    spice = Spice.find_by_id(params[:id])
+    if spice
+      spice.destroy
+      head :no_content
+    else
+      render json: { error: "Spice not found" }
+    end
+  end
+
 
   private
 
