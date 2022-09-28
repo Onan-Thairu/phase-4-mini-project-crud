@@ -1,5 +1,7 @@
 class SpicesController < ApplicationController
 
+rescue_from ActiveRecord::RecordNotFound, with: :spice_not_found
+
   # GET /spices
   def index
     spices = Spice.all
@@ -9,7 +11,7 @@ class SpicesController < ApplicationController
   # POST /spices
   def create
     spice = Spice.create(spice_params)
-    render json: spice
+    render json: spice, status: :created
   end
 
   # PATCH /spices/:id
@@ -17,8 +19,8 @@ class SpicesController < ApplicationController
     spice = find_spice
     spice.update(spice_params)
     render json: spice
-  rescue ActiveRecord::RecordNotFound
-    spice_not_found
+  # rescue ActiveRecord::RecordNotFound
+  #   spice_not_found
   end
 
   # DELETE /spices/:id
@@ -26,8 +28,8 @@ class SpicesController < ApplicationController
     spice = find_spice
     spice.destroy
     head :no_content
-  rescue ActiveRecord::RecordNotFound
-    spice_not_found
+  # rescue ActiveRecord::RecordNotFound
+  #   spice_not_found
   end
 
 
